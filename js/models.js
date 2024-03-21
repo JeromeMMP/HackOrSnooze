@@ -1,5 +1,6 @@
 "use strict";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imthc2EiLCJpYXQiOjE3MTA4NjI5Mjl9.faESTz2AInR8ARqFiYP0Uj44Q5y83xWRi9mCl9b2EkU"
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imthc2EiLCJpYXQiOjE3MTA4NjI5Mjl9.faESTz2AInR8ARqFiYP0Uj44Q5y83xWRi9mCl9b2EkU";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 
@@ -8,7 +9,6 @@ const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
  */
 
 class Story {
-
   /** Make instance of Story from data object about story:
    *   - {title, author, url, username, storyId, createdAt}
    */
@@ -25,16 +25,16 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // let startIndex = this.url.indexOf('.')+1
-    // let endIndex = this.url.indexOf('.com')+5
-    // return this.url.slice(startIndex,endIndex)
-    
+    let hostName = this.url;
+    if (hostName.includes(".com")) {
+      return hostName.slice(0, hostName.indexOf(".com") + 5);
+    } else return hostName;
+    // return console.log();
     // UNIMPLEMENTED: complete this function!
-    // Would host be the URL untill .com ? 
+    // Would host be the URL untill .com ?
     //return "hostname.com";
   }
 }
-
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
@@ -64,11 +64,11 @@ class StoryList {
       url: `${BASE_URL}/stories`,
       method: "GET",
     });
-    // Kyle: this way of making a get request like an object; how is it called? 
+    // Kyle: this way of making a get request like an object; how is it called?
 
     // turn plain old story objects from API into instances of Story class
-    const stories = response.data.stories.map(story => new Story(story));
-    //KYLE: how is this arrow function fetching automaticly this parameters. ? IS story an element from the map being passed and searched automaticly for parameter that has the same name ? 
+    const stories = response.data.stories.map((story) => new Story(story));
+    //KYLE: how is this arrow function fetching automaticly this parameters. ? IS story an element from the map being passed and searched automaticly for parameter that has the same name ?
 
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
@@ -81,24 +81,18 @@ class StoryList {
    * Returns the new Story instance
    */
 
-   addStory(  user, newStory ) {
-    let token = user.loginToken
-
-
-    let res = axios.post( `${BASE_URL}/stories`, 
-      {
-        token,
-        story: newStory
-      }
-    );
-
-    
-    return res
+  async addStory(user, newStory) {
+    let token = user.loginToken;
+    console.log(newStory);
+    let res = axios.post(`${BASE_URL}/stories`, {
+      token: token,
+      story: newStory,
+    });
+    return new Story(res);
     // UNIMPLEMENTED: complete this function!
   }
 }
 // new StoryList.addStory(currentUser, {title:"best day ever", author: 'kasabe', url: "http://queteimporta.com"});
-
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -110,21 +104,17 @@ class User {
    *   - token
    */
 
-  constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+  constructor(
+    { username, name, createdAt, favorites = [], ownStories = [] },
+    token
+  ) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
 
     // instantiate Story instances for the user's favorites and ownStories
-    this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.favorites = favorites.map((s) => new Story(s));
+    this.ownStories = ownStories.map((s) => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -144,7 +134,7 @@ class User {
       data: { user: { username, password, name } },
     });
 
-    let { user } = response.data
+    let { user } = response.data;
 
     return new User(
       {
@@ -152,7 +142,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
@@ -179,7 +169,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
@@ -205,7 +195,7 @@ class User {
           name: user.name,
           createdAt: user.createdAt,
           favorites: user.favorites,
-          ownStories: user.stories
+          ownStories: user.stories,
         },
         token
       );
