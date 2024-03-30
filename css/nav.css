@@ -21,3 +21,11 @@ nav {
   margin-left: auto;
   text-align: right;
 }
+
+/* giving space to brand */
+
+.nav-profile-options{
+  margin-left: 25px;
+}
+
+
