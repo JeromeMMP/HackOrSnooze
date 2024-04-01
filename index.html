@@ -37,10 +37,10 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
-  <div class="nav-profile-options">
-    <p>|<a class="nav-link">Submit</a>
-      |<a class="nav-link">Favorites</a>
-      |<a class="nav-link">My stories</a>
+  <div class="nav-profile-options hidden">
+    <p>|<a class="nav-link" id="nav-submit">Submit</a>
+      |<a class="nav-link" id="nav-favorites">Favorites</a>
+      |<a class="nav-link" id="nav-my-stories">My stories</a>
     </p> 
   </div>
   <div class="nav-right">
@@ -62,8 +62,8 @@
 </section>
 
 <!-- submit stories form -->
-<section class="submit-forms-container container hidden">
-  <form action="#" id="story-form" class="account-forms-container" method="post">
+<section class="submit-forms-container container ">
+  <form action="#" id="story-form" class="account-forms-container hidden" method="post">
     <h4>Create a Story</h4>
     <div>
       <label for="title">Title</label>
@@ -77,7 +77,7 @@
       <label for="url">URL</label>
       <input type="text"  id="url">
     </div>
-      <button type="submit">Create</button>
+      <button type="submit" id="create-story">Create</button>
     
   </form>
 </section>

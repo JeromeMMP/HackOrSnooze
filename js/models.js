@@ -83,16 +83,13 @@ class StoryList {
 
   async addStory(user, newStory) {
     let token = user.loginToken;
-    console.log(newStory);
-    let res = axios.post(`${BASE_URL}/stories`, {
+    let res = await axios.post(`${BASE_URL}/stories`, {
       token: token,
       story: newStory,
     });
     return new Story(res);
-    // UNIMPLEMENTED: complete this function!
   }
 }
-// new StoryList.addStory(currentUser, {title:"best day ever", author: 'kasabe', url: "http://queteimporta.com"});
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)

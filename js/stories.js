@@ -51,27 +51,56 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-// practicing with api
-
-async function getToken(){ 
-  let response = await axios.post('https://hack-or-snooze-v3.herokuapp.com/signup',
-    {
-      "user": {
-        "name": "kasabe",
-        "username": "kasabe",
-        "password": "password"
-      }
-    }
-  )
-
-  return response.data
+function getStoryData() {
+  let title = $("#title").val();
+  let author = $("#author").val();
+  let url = $("#url").val();
+  const storyData = { title, author, url };
+  console.log(storyData.title);
+  return storyData;
 }
 
-// const mainUser = { "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imthc2EiLCJpYXQiOjE3MTA4NjI5Mjl9.faESTz2AInR8ARqFiYP0Uj44Q5y83xWRi9mCl9b2EkU","user":{"createdAt":"2024-03-19T15:42:09.972Z","favorites":[],"name":"kahSabe","stories":[],"updatedAt":"2024-03-19T15:42:09.972Z","username":"kasa"}}
+function checkForValidData(storyData) {
+  if (
+    [storyData.author, storyData.title, storyData.url].some(
+      (value) => value === ""
+    )
+  ) {
+    return alert("Please fill out all the information required");
+  } else {
+    $("#title").val("");
+    $("#author").val("");
+    $("#url").val("");
+    return;
+  }
+}
 
-// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imthc2EiLCJpYXQiOjE3MTA4NjI5Mjl9.faESTz2AInR8ARqFiYP0Uj44Q5y83xWRi9mCl9b2EkU"
+async function createStory(evt) {
+  evt.preventDefault();
 
-// async function getReq(){
-//   const response = await axios.get('https://hack-or-snooze-v3.herokuapp.com/stories');
-//   return response.data.stories
+  let storyData = getStoryData();
+  checkForValidData(storyData);
+  hidePageComponents();
+  $allStoriesList.show();
+  console.log(storyData);
+  let newStory = await StoryList.constructor.addStory(currentUser, storyData);
+
+  return newStory;
+}
+
+$("#create-story").on("click", createStory);
+// practicing with api
+
+// async function getToken(){
+//   let response = await axios.post('https://hack-or-snooze-v3.herokuapp.com/signup',
+//     {
+//       "user": {
+//         "name": "kasabe",
+//         "username": "kasabe",
+//         "password": "password"
+//       }
+//     }
+//   )
+
+//   return response.data
 // }
