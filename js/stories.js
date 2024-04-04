@@ -23,7 +23,19 @@ function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
-  return $(`
+
+  if (currentUser) {
+    return $(`<li id="${story.storyId}">
+       <i class='star far fa-star fa-s' style='color:#000000'></i>
+       <a href="${story.url}" target="a_blank" class="story-link">
+        ${story.title}
+        </a>
+        <small class="story-hostname">(${hostName})</small>
+        <small class="story-author">by ${story.author}</small>
+        <small class="story-user">posted by ${story.username}</small>
+    </li>`);
+  } else {
+    return $(`
       <li id="${story.storyId}">
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -33,6 +45,7 @@ function generateStoryMarkup(story) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+  }
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -51,12 +64,12 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
+// Creating Story in UI
 function getStoryData() {
   let title = $("#title").val();
   let author = $("#author").val();
   let url = $("#url").val();
-  const storyData = { title, author, url };
-  console.log(storyData.title);
+  const storyData = { username: currentUser.username, title, author, url };
   return storyData;
 }
 
@@ -77,18 +90,40 @@ function checkForValidData(storyData) {
 
 async function createStory(evt) {
   evt.preventDefault();
-
   let storyData = getStoryData();
   checkForValidData(storyData);
-  hidePageComponents();
-  $allStoriesList.show();
   console.log(storyData);
-  let newStory = await StoryList.constructor.addStory(currentUser, storyData);
-
+  const newStory = await storyList.addStory(currentUser, storyData);
+  console.log(newStory);
+  putStoriesOnPage();
   return newStory;
 }
 
 $("#create-story").on("click", createStory);
+
+// adding and removing to favorites
+// async function edittingFavorites(evt) {
+//   const target = evt.target;
+//   const addToFavorite = await axios.post(
+//     `${BASE_URL}/users/${currentUser}/favorites/${target.parentElement.id}`,
+//     { token: currentUser.loginToken }
+//   );
+
+//   if (target.parentElement.innerHTML.includes("far fa-star fa-s")) {
+//     target.parentElement.innerHTML.replace(
+//       "far fa-star fa-s",
+//       "fas fa-star fa-s"
+//     );
+//   } else {
+//     target.parentElement.innerHTML.replace(
+//       "fas fa-star fa-s",
+//       "far fa-star fa-s"
+//     );
+//   }
+// }
+
+// $body.on("click", $(".star"), edittingFavorites);
+
 // practicing with api
 
 // async function getToken(){

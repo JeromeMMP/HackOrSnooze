@@ -1,6 +1,4 @@
 "use strict";
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imthc2EiLCJpYXQiOjE3MTA4NjI5Mjl9.faESTz2AInR8ARqFiYP0Uj44Q5y83xWRi9mCl9b2EkU";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
 
@@ -29,10 +27,6 @@ class Story {
     if (hostName.includes(".com")) {
       return hostName.slice(0, hostName.indexOf(".com") + 5);
     } else return hostName;
-    // return console.log();
-    // UNIMPLEMENTED: complete this function!
-    // Would host be the URL untill .com ?
-    //return "hostname.com";
   }
 }
 
@@ -75,19 +69,21 @@ class StoryList {
   }
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
-   * - user - the current instance of User who will post the story
+   * - user - the current instance of User who will post theF story
    * - obj of {title, author, url}
    *
    * Returns the new Story instance
    */
 
   async addStory(user, newStory) {
-    let token = user.loginToken;
     let res = await axios.post(`${BASE_URL}/stories`, {
-      token: token,
+      token: user.loginToken,
       story: newStory,
     });
-    return new Story(res);
+
+    const story = new Story(res);
+    this.stories.unshift(story);
+    return story;
   }
 }
 
