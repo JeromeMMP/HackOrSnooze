@@ -25,7 +25,7 @@ class Story {
   getHostName() {
     let hostName = this.url;
     if (hostName.includes(".com")) {
-      return hostName.slice(0, hostName.indexOf(".com") + 5);
+      return hostName.slice(0, hostName.indexOf(".com") + 4);
     } else return hostName;
   }
 }
