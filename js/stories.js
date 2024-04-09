@@ -25,7 +25,22 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
 
   if (currentUser) {
-    return $(`<li id="${story.storyId}">
+    if (
+      currentUser.favorites.some(
+        (userFavorites) => userFavorites.storyId === story.storyId
+      )
+    ) {
+      return $(`<li id="${story.storyId}" class="favorites">
+       <i class='star fas fa-star fa-s' style='color:#000000'></i>
+       <a href="${story.url}" target="a_blank" class="story-link">
+        ${story.title}
+        </a>
+        <small class="story-hostname">(${hostName})</small>
+        <small class="story-author">by ${story.author}</small>
+        <small class="story-user">posted by ${story.username}</small>
+    </li>`);
+    } else
+      return $(`<li id="${story.storyId}">
        <i class='star far fa-star fa-s' style='color:#000000'></i>
        <a href="${story.url}" target="a_blank" class="story-link">
         ${story.title}
@@ -69,6 +84,9 @@ function getStoryData() {
   let title = $("#title").val();
   let author = $("#author").val();
   let url = $("#url").val();
+  if (!url.includes("http")) {
+    url = "http://" + $("#url").val();
+  }
   const storyData = { username: currentUser.username, title, author, url };
   return storyData;
 }
@@ -94,7 +112,6 @@ async function createStory(evt) {
   checkForValidData(storyData);
   console.log(storyData);
   const newStory = await storyList.addStory(currentUser, storyData);
-  console.log(newStory);
   putStoriesOnPage();
   return newStory;
 }
@@ -102,40 +119,65 @@ async function createStory(evt) {
 $("#create-story").on("click", createStory);
 
 // adding and removing to favorites
-// async function edittingFavorites(evt) {
-//   const target = evt.target;
-//   const addToFavorite = await axios.post(
-//     `${BASE_URL}/users/${currentUser}/favorites/${target.parentElement.id}`,
-//     { token: currentUser.loginToken }
-//   );
 
-//   if (target.parentElement.innerHTML.includes("far fa-star fa-s")) {
-//     target.parentElement.innerHTML.replace(
-//       "far fa-star fa-s",
-//       "fas fa-star fa-s"
-//     );
-//   } else {
-//     target.parentElement.innerHTML.replace(
-//       "fas fa-star fa-s",
-//       "far fa-star fa-s"
-//     );
-//   }
-// }
+async function addingFavoritesAPI(targetID) {
+  const addToFavorites = await axios.post(
+    `${BASE_URL}/users/${currentUser.username}/favorites/${targetID}`,
+    { token: currentUser.loginToken }
+  );
 
-// $body.on("click", $(".star"), edittingFavorites);
+  const storyFromAPI = await axios.get(`${BASE_URL}/stories/${targetID}`);
+  console.log(storyFromAPI);
+  let story = new Story(storyFromAPI.data.story);
+  currentUser.favorites.unshift(story);
+  return addToFavorites;
+}
 
-// practicing with api
+async function deleteFavoritesAPI(targetID) {
+  try {
+    console.log(currentUser.loginToken);
+    const deleteFromFavorites = await axios.delete(
+      `${BASE_URL}/users/${currentUser.username}/favorites/${targetID}`,
+      { token: currentUser.loginToken }
+    );
+    console.log(deleteFromFavorites);
+  } catch (error) {
+    console.log("error on:", error.message);
+  }
 
-// async function getToken(){
-//   let response = await axios.post('https://hack-or-snooze-v3.herokuapp.com/signup',
-//     {
-//       "user": {
-//         "name": "kasabe",
-//         "username": "kasabe",
-//         "password": "password"
-//       }
-//     }
-//   )
+  // const newFavorites = currenteUser.favorites.filter(
+  //   (story) => story.storyID !== targetID
+  // );
+  // version 2
+  // currentUser.favorites.splice(0, currentUser.favorites.length);
+  // newFavorites.favorites((story) => currentUser.favorites.unshift(story));
+  // version 1
+  // for (let story of currentUser.favorites) {
+  //   if (!newFavorites[story]) {
+  //     let index = currentUser.favorites.indexof(story);
+  //     currentUser.favorites.splice(index, 1);
+  //   }
+  // }
+  return deleteFromFavorites;
+}
 
-//   return response.data
-// }
+function checkingForFavoriteUI(target) {
+  if (target.parentElement.className !== "favorites") {
+    target.parentElement.className = "favorites";
+    target.classList.remove("far");
+    target.classList.add("fas");
+    addingFavoritesAPI(target.parentElement.id);
+  } else {
+    target.parentElement.classList.toggle("favorites");
+    target.classList.remove("fas");
+    target.classList.add("far");
+    deleteFavoritesAPI(target.parentElement.id);
+  }
+}
+
+function addingFavoritesToPage(evt) {
+  let target = evt.target;
+  checkingForFavoriteUI(target);
+}
+
+$("ol").on("click", ".star", addingFavoritesToPage);

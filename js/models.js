@@ -81,8 +81,9 @@ class StoryList {
       story: newStory,
     });
 
-    const story = new Story(res);
+    const story = new Story(res.data.story);
     this.stories.unshift(story);
+    user.ownStories.unshift(story);
     return story;
   }
 }
