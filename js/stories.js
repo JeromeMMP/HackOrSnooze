@@ -133,32 +133,32 @@ async function addingFavoritesAPI(targetID) {
   return addToFavorites;
 }
 
-async function deleteFavoritesAPI(targetID) {
+async function deleteFavoritesAPI(targetID, username, token) {
   try {
-    console.log(currentUser.loginToken);
-    const deleteFromFavorites = await axios.delete(
-      `${BASE_URL}/users/${currentUser.username}/favorites/${targetID}`,
-      { token: currentUser.loginToken }
+    const deleteFromFavorites = await axios({
+      url: `${BASE_URL}/users/${username}/favorites/${targetID}`,
+      method: "DELETE",
+      params: { token },
+    });
+
+    const newFavorites = currentUser.favorites.filter(
+      (story) => story.storyId !== targetID
     );
-    console.log(deleteFromFavorites);
+    console.log(newFavorites);
+    // version 2
+    currentUser.favorites.splice(0, currentUser.favorites.length);
+    newFavorites.forEach((story) => currentUser.favorites.unshift(story));
+    // version 1
+    // for (let story of currentUser.favorites) {
+    //   if (!newFavorites[story]) {
+    //     let index = currentUser.favorites.indexof(story);
+    //     currentUser.favorites.splice(index, 1);
+    //   }
+    // }
+    return deleteFromFavorites;
   } catch (error) {
     console.log("error on:", error.message);
   }
-
-  // const newFavorites = currenteUser.favorites.filter(
-  //   (story) => story.storyID !== targetID
-  // );
-  // version 2
-  // currentUser.favorites.splice(0, currentUser.favorites.length);
-  // newFavorites.favorites((story) => currentUser.favorites.unshift(story));
-  // version 1
-  // for (let story of currentUser.favorites) {
-  //   if (!newFavorites[story]) {
-  //     let index = currentUser.favorites.indexof(story);
-  //     currentUser.favorites.splice(index, 1);
-  //   }
-  // }
-  return deleteFromFavorites;
 }
 
 function checkingForFavoriteUI(target) {
@@ -171,7 +171,12 @@ function checkingForFavoriteUI(target) {
     target.parentElement.classList.toggle("favorites");
     target.classList.remove("fas");
     target.classList.add("far");
-    deleteFavoritesAPI(target.parentElement.id);
+    console.log(target.parentElement.id);
+    deleteFavoritesAPI(
+      target.parentElement.id,
+      currentUser.username,
+      currentUser.loginToken
+    );
   }
 }
 
