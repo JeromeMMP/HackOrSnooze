@@ -1,6 +1,8 @@
 /* General typography */
 
 body {
+  background: rgb(155,208,240);
+  background: linear-gradient(90deg, rgba(155,208,240,1) 0%, rgba(222,170,231,1) 43%, rgba(222,170,231,1) 57%, rgba(155,208,240,1) 100%);
   font-family: Arimo, sans-serif;
   margin: 8px 7.5vw;
 }

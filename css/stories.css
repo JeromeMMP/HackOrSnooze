@@ -31,11 +31,22 @@
 }
 
 .story-author {
-  margin-left: 2em;
+  display: block ;
+  font-size: small;
+  margin-top: .5em;
+  margin-left:21px;
+  color: rgb(21, 193, 21);
+  
 }
 
 .story-user {
-  display: block;
+  display: flex;
+  font-size: small;
+  margin-top: .5em;
+  margin-left:21px;
+  font-weight:400;
+  color: rgb(250, 203, 31);
+  
 }
 
 #my-stories-list{
@@ -44,9 +55,21 @@
 .delete-btn{
   padding-right: 1rem;
 }
+.delete-btn:hover{
+  cursor: pointer;
+}
 .star{
   padding-right:.1rem;
+  
+}
+.star:hover{
+  cursor: pointer;
 }
 li {
   padding: .3rem;
+}
+
+hr{
+max-width: 800px;
+border-color: rgba(128, 128, 128, 0.064);
 }

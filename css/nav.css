@@ -28,4 +28,8 @@ nav {
   margin-left: 25px;
 }
 
+.nav-profile-options > p > a:hover{
+  cursor: pointer;
+  
+}
 

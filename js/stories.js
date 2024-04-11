@@ -36,9 +36,12 @@ function generateStoryMarkup(story) {
         ${story.title}
         </a>
         <small class="story-hostname">(${hostName})</small>
+        <br>
         <small class="story-author">by ${story.author}</small>
+        
         <small class="story-user">posted by ${story.username}</small>
-    </li>`);
+    </li>
+    <hr>`);
     } else
       return $(`<li id="${story.storyId}">
        <i class='star far fa-star fa-s' style='color:#000000'></i>
@@ -46,9 +49,12 @@ function generateStoryMarkup(story) {
         ${story.title}
         </a>
         <small class="story-hostname">(${hostName})</small>
+        <br>
         <small class="story-author">by ${story.author}</small>
+       
         <small class="story-user">posted by ${story.username}</small>
-    </li>`);
+    </li>
+    <hr>`);
   } else {
     return $(`
       <li id="${story.storyId}">
@@ -57,8 +63,10 @@ function generateStoryMarkup(story) {
         </a>
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
+        
         <small class="story-user">posted by ${story.username}</small>
       </li>
+      <hr>
     `);
   }
 }
@@ -119,11 +127,18 @@ $("#create-story").on("click", createStory);
 
 // adding and removing to favorites
 
-async function addingFavoritesAPI(targetID) {
-  const addToFavorites = await axios.post(
-    `${BASE_URL}/users/${currentUser.username}/favorites/${targetID}`,
-    { token: currentUser.loginToken }
-  );
+async function addingFavoritesAPI(targetID, username, token) {
+  try {
+    console.log(currentUser.loginToken);
+    const deleteFromFavorites = await axios({
+      url: `${BASE_URL}/users/${username}/favorites/${targetID}`,
+      method: "post",
+      params: { token },
+    });
+    console.log(deleteFromFavorites);
+  } catch (error) {
+    console.log("error on:", error.message);
+  }
 
   const storyFromAPI = await axios.get(`${BASE_URL}/stories/${targetID}`);
 
@@ -150,13 +165,7 @@ async function deleteFavoritesAPI(targetID, username, token) {
     });
 
     removingFromCurrentFavorites(targetID);
-    // version 1
-    // for (let story of currentUser.favorites) {
-    //   if (!newFavorites[story]) {
-    //     let index = currentUser.favorites.indexof(story);
-    //     currentUser.favorites.splice(index, 1);
-    //   }
-    // }
+
     return deleteFromFavorites;
   } catch (error) {
     console.log("error on:", error.message);
@@ -168,7 +177,11 @@ function checkingForFavoriteUI(target) {
     target.parentElement.className = "favorites";
     target.classList.remove("far");
     target.classList.add("fas");
-    addingFavoritesAPI(target.parentElement.id);
+    addingFavoritesAPI(
+      target.parentElement.id,
+      currentUser.username,
+      currentUser.loginToken
+    );
   } else {
     target.parentElement.classList.toggle("favorites");
     target.classList.remove("fas");
