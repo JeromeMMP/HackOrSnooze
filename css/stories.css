@@ -37,3 +37,16 @@
 .story-user {
   display: block;
 }
+
+#my-stories-list{
+  list-style-type: none;
+}
+.delete-btn{
+  padding-right: 1rem;
+}
+.star{
+  padding-right:.1rem;
+}
+li {
+  padding: .3rem;
+}

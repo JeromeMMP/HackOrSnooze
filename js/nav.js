@@ -41,4 +41,24 @@ function navSubmitClick(evt) {
   $submitForm.show();
 }
 
-$("#nav-submit").on("click", navSubmitClick);
+$navSubmit.on("click", navSubmitClick);
+
+// Favorites click
+function navFavoritesClick(evt) {
+  hidePageComponents();
+
+  putUserRelatedStoriesOnPage(currentUser.favorites, $favoriteStoriesList);
+  $favoriteStoriesList.show();
+}
+
+$navFavorites.on("click", navFavoritesClick);
+
+// my stories click
+function navMyStoriesClick(evt) {
+  hidePageComponents();
+
+  putUserRelatedStoriesOnPage(currentUser.ownStories, $myStories);
+  $myStories.show();
+}
+
+$navMyStories.on("click", navMyStoriesClick);

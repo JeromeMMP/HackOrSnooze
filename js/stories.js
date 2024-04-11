@@ -110,7 +110,6 @@ async function createStory(evt) {
   evt.preventDefault();
   let storyData = getStoryData();
   checkForValidData(storyData);
-  console.log(storyData);
   const newStory = await storyList.addStory(currentUser, storyData);
   putStoriesOnPage();
   return newStory;
@@ -127,10 +126,19 @@ async function addingFavoritesAPI(targetID) {
   );
 
   const storyFromAPI = await axios.get(`${BASE_URL}/stories/${targetID}`);
-  console.log(storyFromAPI);
+
   let story = new Story(storyFromAPI.data.story);
   currentUser.favorites.unshift(story);
   return addToFavorites;
+}
+function removingFromCurrentFavorites(targetID) {
+  const newFavorites = currentUser.favorites.filter(
+    (story) => story.storyId !== targetID
+  );
+
+  // version 2
+  currentUser.favorites.splice(0, currentUser.favorites.length);
+  newFavorites.forEach((story) => currentUser.favorites.unshift(story));
 }
 
 async function deleteFavoritesAPI(targetID, username, token) {
@@ -141,13 +149,7 @@ async function deleteFavoritesAPI(targetID, username, token) {
       params: { token },
     });
 
-    const newFavorites = currentUser.favorites.filter(
-      (story) => story.storyId !== targetID
-    );
-    console.log(newFavorites);
-    // version 2
-    currentUser.favorites.splice(0, currentUser.favorites.length);
-    newFavorites.forEach((story) => currentUser.favorites.unshift(story));
+    removingFromCurrentFavorites(targetID);
     // version 1
     // for (let story of currentUser.favorites) {
     //   if (!newFavorites[story]) {
@@ -171,7 +173,6 @@ function checkingForFavoriteUI(target) {
     target.parentElement.classList.toggle("favorites");
     target.classList.remove("fas");
     target.classList.add("far");
-    console.log(target.parentElement.id);
     deleteFavoritesAPI(
       target.parentElement.id,
       currentUser.username,
@@ -186,3 +187,59 @@ function addingFavoritesToPage(evt) {
 }
 
 $("ol").on("click", ".star", addingFavoritesToPage);
+$("ul").on("click", ".star", addingFavoritesToPage);
+
+// Putting only user related stories on UI (favorites or ownStories)
+
+function putUserRelatedStoriesOnPage(array, favoritesOrOwn) {
+  console.debug("putUserRelatedStoriesOnPage");
+
+  favoritesOrOwn.empty();
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of array) {
+    const $story = generateStoryMarkup(story);
+
+    favoritesOrOwn.append($story);
+  }
+  if (favoritesOrOwn === $myStories) {
+    let myStories = document.querySelectorAll("#my-stories-list > li");
+
+    myStories.forEach(
+      (story) =>
+        (story.innerHTML =
+          '<i class=" delete-btn fas fa-trash-alt"></i>' + story.innerHTML)
+    );
+  }
+}
+
+async function removeStoryFromAPI(targetID) {
+  try {
+    const deleteStory = await axios({
+      url: `${BASE_URL}/stories/${targetID}`,
+      method: "DELETE",
+      params: { token: currentUser.loginToken },
+    });
+
+    //removing from currentUser.ownStories
+    const newOwnStories = currentUser.ownStories.filter(
+      (story) => story.storyId !== targetID
+    );
+
+    currentUser.ownStories.splice(0, currentUser.ownStories.length);
+    newOwnStories.forEach((story) => currentUser.ownStories.unshift(story));
+    return deleteStory;
+  } catch (error) {
+    console.log("error message:", error.message);
+  }
+}
+
+function removeStory(evt) {
+  let target = evt.target;
+
+  removeStoryFromAPI(target.parentElement.id);
+  removingFromCurrentFavorites(target.parentElement.id);
+  target.parentElement.remove();
+}
+
+$("ul").on("click", ".delete-btn", removeStory);
