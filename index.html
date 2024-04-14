@@ -51,28 +51,26 @@
 </nav>
 
 <!-- area for stories (all stories, user stories, favorites) -->
-<section class="stories-container container">
+<section id="stories-area">
+  <section class="stories-container container">
 
-  <!-- loading message (removed by JS after stories loaded) -->
-  <div id="stories-loading-msg">Loading&hellip;</div>
+    <!-- loading message (removed by JS after stories loaded) -->
+    <div id="stories-loading-msg">Loading&hellip;</div>
 
-  <!-- List of all stories -->
-  <ol id="all-stories-list" class="stories-list"></ol>
+    <!-- List of all stories -->
+    <ol id="all-stories-list" class="stories-list"></ol>
 
-</section>
+  </section>
 
-<section class="favorites-container container">
+  <section class="favorites-container container">
+    <!-- list of favorite stories -->
+    <ul id="favorite-stories-list" class="stories-list"></ol>
+  </section>
 
-  <!-- list of favorite stories -->
-
-  <ol id="favorite-stories-list" class="stories-list"></ol>
-  
-
-</section>
-
-<section class="my-stories-container container">
-
-  <ul id="my-stories-list" class="stories-list"></ol>
+  <section class="my-stories-container container">
+    <!-- list of stories created by user -->
+    <ul id="my-stories-list" class="stories-list"></ol>
+  </section>
 </section>
 
 <!-- submit stories form -->

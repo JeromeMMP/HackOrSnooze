@@ -33,6 +33,7 @@
 .story-author {
   display: block ;
   font-size: small;
+  font-weight: 700;
   margin-top: .5em;
   margin-left:21px;
   color: rgb(21, 193, 21);
@@ -44,12 +45,13 @@
   font-size: small;
   margin-top: .5em;
   margin-left:21px;
-  font-weight:400;
+  font-weight: 700;
   color: rgb(250, 203, 31);
   
 }
 
-#my-stories-list{
+
+ul{
   list-style-type: none;
 }
 .delete-btn{

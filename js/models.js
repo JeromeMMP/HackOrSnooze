@@ -58,7 +58,6 @@ class StoryList {
       url: `${BASE_URL}/stories`,
       method: "GET",
     });
-    // Kyle: this way of making a get request like an object; how is it called?
 
     // turn plain old story objects from API into instances of Story class
     const stories = response.data.stories.map((story) => new Story(story));

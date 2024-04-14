@@ -151,7 +151,6 @@ function removingFromCurrentFavorites(targetID) {
     (story) => story.storyId !== targetID
   );
 
-  // version 2
   currentUser.favorites.splice(0, currentUser.favorites.length);
   newFavorites.forEach((story) => currentUser.favorites.unshift(story));
 }
@@ -199,8 +198,9 @@ function addingFavoritesToPage(evt) {
   checkingForFavoriteUI(target);
 }
 
-$("ol").on("click", ".star", addingFavoritesToPage);
-$("ul").on("click", ".star", addingFavoritesToPage);
+$allStoriesList.on("click", ".star", addingFavoritesToPage);
+$myStories.on("click", ".star", addingFavoritesToPage);
+$favoriteStoriesList.on("click", ".star", addingFavoritesToPage);
 
 // Putting only user related stories on UI (favorites or ownStories)
 
@@ -255,4 +255,4 @@ function removeStory(evt) {
   target.parentElement.remove();
 }
 
-$("ul").on("click", ".delete-btn", removeStory);
+$myStories.on("click", ".delete-btn", removeStory);
