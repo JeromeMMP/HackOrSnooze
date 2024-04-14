@@ -20,16 +20,17 @@ nav {
 .nav-right {
   margin-left: auto;
   text-align: right;
+  font-weight: 600;
 }
 
 /* giving space to brand */
 
-.nav-profile-options{
+.nav-profile-options {
   margin-left: 25px;
+  font-weight: 600;
 }
 
-.nav-profile-options > p > a:hover{
+.nav-profile-options>p>a:hover {
   cursor: pointer;
-  
-}
 
+}

@@ -31,7 +31,7 @@ function generateStoryMarkup(story) {
       )
     ) {
       return $(`<li id="${story.storyId}" class="favorites">
-       <i class='star fas fa-star fa-s' style='color:#000000'></i>
+       <i class='star fas fa-star fa-s' style='color:#808080'></i>
        <a href="${story.url}" target="a_blank" class="story-link">
         ${story.title}
         </a>
@@ -44,7 +44,7 @@ function generateStoryMarkup(story) {
     <hr>`);
     } else
       return $(`<li id="${story.storyId}">
-       <i class='star far fa-star fa-s' style='color:#000000'></i>
+       <i class='star far fa-star fa-s' style='color:#808080'></i>
        <a href="${story.url}" target="a_blank" class="story-link">
         ${story.title}
         </a>
