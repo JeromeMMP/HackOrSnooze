@@ -4,7 +4,6 @@
 
 const $body = $("body");
 
-const $storiesArea = $("stories-area");
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
 const $favoriteStoriesList = $("#favorite-stories-list");

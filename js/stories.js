@@ -197,7 +197,7 @@ function addingFavoritesToPage(evt) {
   let target = evt.target;
   checkingForFavoriteUI(target);
 }
-
+// event listener on each list
 $allStoriesList.on("click", ".star", addingFavoritesToPage);
 $myStories.on("click", ".star", addingFavoritesToPage);
 $favoriteStoriesList.on("click", ".star", addingFavoritesToPage);
@@ -208,6 +208,12 @@ function putUserRelatedStoriesOnPage(array, favoritesOrOwn) {
   console.debug("putUserRelatedStoriesOnPage");
 
   favoritesOrOwn.empty();
+  if (array.length === 0) {
+    let message = $(
+      "<p> Sorry, there are no stories to show in this section.</p>"
+    );
+    favoritesOrOwn.append(message);
+  }
 
   // loop through all of our stories and generate HTML for them
   for (let story of array) {
